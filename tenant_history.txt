@@ -1,0 +1,18 @@
+SELECT t.code, 
+       t.NAME, 
+       th.dtoccurred, 
+       pu.uname 
+FROM   tenant_history th 
+       INNER JOIN (SELECT t.hmyperson                      ten, 
+                          t.scode                          code, 
+                          t.sunitcode                      unit, 
+                          t.sfirstname + ' ' + t.slastname NAME 
+                   FROM   tenant t 
+                          INNER JOIN property p 
+                                  ON t.hproperty = p.hmy 
+                   WHERE  p.scode = '842-749')t 
+               ON th.htent = t.ten 
+       INNER JOIN pmuser pu 
+               ON pu.hmy = th.huser 
+                  AND th.sevent = 'Move Out' 
+                  AND th.dtdate BETWEEN '10/01/2017' AND '10/31/2017'  
